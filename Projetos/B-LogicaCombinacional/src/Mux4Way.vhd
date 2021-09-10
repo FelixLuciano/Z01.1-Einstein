@@ -18,5 +18,4 @@ begin
     	c when (sel = "10") else
     	d;
 
-		
 end architecture;
