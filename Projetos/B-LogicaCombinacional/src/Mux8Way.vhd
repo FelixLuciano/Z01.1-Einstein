@@ -24,6 +24,6 @@ begin
 		e when (sel = "100") else
 		f when (sel = "101") else
 		g when (sel = "110") else
-		h;
+		h wehn (sel = "111") else "000";
 
 end architecture;
