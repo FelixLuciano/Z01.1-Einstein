@@ -10,6 +10,6 @@ end entity;
 architecture arch of impressora is
 
 begin
-
+    x <= not(SW1 and SW2) or not(SW1 and SW3) or not(SW3 and SW4) or not(SW2 and SW3) or not(SW2 and SW4)
 
 end architecture;
