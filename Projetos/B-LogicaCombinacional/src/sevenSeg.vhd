@@ -20,12 +20,11 @@ leds <= "0000001" when bcd = "0000" else
 		"0001111" when bcd = "0111" else
 		"0000000" when bcd = "1000" else
 		"0000100" when bcd = "1001" else 
-		"1011111" when bcd = "1001" else 
-		"1111100" when bcd = "1001" else 
-		"0111001" when bcd = "1001" else 
-		"1011110" when bcd = "1001" else 
-		"1111001" when bcd = "1001" else 
-		"1110001" when bcd = "1001" else 
-		"0000000";
+		"1011111" when bcd = "1010" else 
+		"1111100" when bcd = "1011" else 
+		"0111001" when bcd = "1100" else 
+		"1011110" when bcd = "1101" else 
+		"1111001" when bcd = "1110" else 
+		"1110001" when bcd = "1111";
 
 end architecture;
