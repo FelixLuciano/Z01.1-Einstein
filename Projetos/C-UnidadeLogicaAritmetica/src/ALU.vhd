@@ -96,6 +96,53 @@ architecture  rtl OF alu is
    SIGNAL zxout,zyout,nxout,nyout,andout,adderout,muxout,precomp: std_logic_vector(15 downto 0);
 
 begin
-  -- Implementação vem aqui!
+		xz: zerador16 PORT MAP (
+				z => zx,
+				a => x,
+				y => zxout
+		)
+
+		xn: inversor16 PORT MAP (
+				z => nx,
+				a => zxout,
+				y => nxout
+		)
+
+		yz: zerador16 PORT MAP (
+				z => zy,
+				a => y,
+				y => zyout
+		)
+
+		yn: inversor16 PORT MAP (
+				z => ny,
+				a => zyout,
+				y => nyout
+		)
+
+		xyadd: Add16 PORT MAP (
+				a => nxout,
+				b => nyout,
+				q => adderout
+		)
+
+		xyand: And16 PORT MAP (
+				a => nxout,
+				b => nyout,
+				q => andout
+		)
+
+		axaddandmux: Mux16 PORT MAP (
+			a   => adderout,
+			b   => andout,
+			sel => f,
+			q   => precomp
+		)
+
+		compout: comparador16 PORT MAP (
+				a  => precomp,
+				zr => zr,
+				ng => ng
+		)
 
 end architecture;
