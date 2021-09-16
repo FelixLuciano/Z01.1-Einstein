@@ -20,7 +20,7 @@ architecture rtl of Add16 is
   -- Aqui declaramos sinais (fios auxiliares)
   -- e componentes (outros módulos) que serao
   -- utilizados nesse modulo.
-  SIGNAL carry: in STD_LOGIC_VECTOR(14 downto 0); 
+  SIGNAL carry: STD_LOGIC_VECTOR(14 downto 0); 
 
   component FullAdder is
     port(
@@ -48,7 +48,7 @@ begin
 
   s3 : FullAdder 
   port map(
-    a => a(0), b => b(0), c => carry(2), soma => q(0), vaium => carry(3)
+    a => a(3), b => b(3), c => carry(2), soma => q(3), vaium => carry(3)
   );
 
   s4 : FullAdder 
