@@ -133,16 +133,21 @@ begin
 		);
 
 		axaddandmux: Mux16 PORT MAP (
-			a   => adderout,
-			b   => andout,
+			a   => andout,
+			b   => adderout,
 			sel => f,
-			q   => precomp
+			q   => muxout
 		);
 
 		compout: comparador16 PORT MAP (
-				a  => precomp,
+				a  => saida,
 				zr => zr,
 				ng => ng
 		);
 
+		inversorno: inversor16 PORT MAP(
+			z => no,
+			a => muxout,
+			y => saida
+		);
 end architecture;
