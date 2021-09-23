@@ -123,30 +123,30 @@ begin
     output  => output7
   );
   
-  Mux: Ram64 PORT MAP (
-    a    => output0;
-    b    => output1;
-    c    => output2;
-    d    => output3;
-    e    => output4;
-    f    => output5;
-    g    => output6;
-    h    => output7;
-    sel  => address(2 downto 0);
-    q    => output;
+  Mux: Mux8Way16 PORT MAP (
+    a   => output0,
+    b   => output1,
+    c   => output2,
+    d   => output3,
+    e   => output4,
+    f   => output5,
+    g   => output6,
+    h   => output7,
+    sel => address(2 downto 0),
+    q   => output
   );
   
-  Demux: Ram64 PORT MAP (
-    a   => load;
-    sel => address(2 downto 0);
-    q0  => load0;
-    q1  => load1;
-    q2  => load2;
-    q3  => load3;
-    q4  => load4;
-    q5  => load5;
-    q6  => load6;
-    q7  => load7);
+  Demux: DMux8Way PORT MAP (
+    a   => load,
+    sel => address(2 downto 0),
+    q0  => load0,
+    q1  => load1,
+    q2  => load2,
+    q3  => load3,
+    q4  => load4,
+    q5  => load5,
+    q6  => load6,
+    q7  => load7
   );
 
 end architecture;
