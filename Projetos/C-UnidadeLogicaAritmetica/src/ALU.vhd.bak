@@ -93,7 +93,7 @@ architecture  rtl OF alu is
 		);
 	end component;
 
-   SIGNAL saidalu,zxout,zyout,nxout,nyout,andout,adderout,muxout,precomp: std_logic_vector(15 downto 0);
+   SIGNAL zxout,zyout,nxout,nyout,andout,adderout,muxout,precomp: std_logic_vector(15 downto 0);
 
 begin
 		xz: zerador16 PORT MAP (
@@ -140,7 +140,7 @@ begin
 		);
 
 		compout: comparador16 PORT MAP (
-				a  => saidalu,
+				a  => saida,
 				zr => zr,
 				ng => ng
 		);
@@ -148,8 +148,6 @@ begin
 		inversorno: inversor16 PORT MAP(
 			z => no,
 			a => muxout,
-			y => saidalu
+			y => saida
 		);
-		
-		saida<=saidalu;
 end architecture;
