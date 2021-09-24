@@ -41,7 +41,6 @@ component FlipFlopD is
 	);
 end component;
 
-
 --------------
 -- signals
 --------------
@@ -65,5 +64,6 @@ u0 : FlipFlopD port map (
 		preset   => set,
 		q        => LEDR(0)
 	);		
+ 
 
 end rtl;
