@@ -140,3 +140,4 @@ architecture arch of Ram4K is
             q7 => load7
         );
     end architecture;
+    
