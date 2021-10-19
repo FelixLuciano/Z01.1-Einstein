@@ -10,3 +10,25 @@
 ; Estamos considerando número inteiros
 
  
+leaw $0, %A
+movw (%A), %D
+lead $1, %A
+subw (%A), %D, %D
+
+IF:
+  lead $ELSE, %A
+  jge %D
+  nop
+  leaw $0, %A
+  movw (%A), %D
+  leaw $2, %A
+  movw %D, (%A)
+  leaw $ENDINF, %A
+  jmp
+  nop
+ELSE:
+  leaw $1, %A
+  movw (%A), %D
+  leaw $2, %A
+  movw %D, (%A)
+ENDIF:
