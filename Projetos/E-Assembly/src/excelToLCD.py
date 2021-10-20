@@ -29,8 +29,10 @@ for y, x in zip(*pixels):
 nasm = ""
 
 for address, value in memory.items():
+  nasm += f"leaw ${value:.0f}, %A\n"
+  nasm += f"movw %A, %D\n"
   nasm += f"leaw ${address:.0f}, %A\n"
-  nasm += f"movw ${value:.0f}, (%A)\n"
+  nasm += f"movw %D, (%A)\n"
   nasm += "\n"
 
 with open("output.nasm", "w") as file:
