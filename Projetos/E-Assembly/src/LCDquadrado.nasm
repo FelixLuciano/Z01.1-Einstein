@@ -6761,46 +6761,4 @@ leaw $18673, %A
 movw %D, (%A)
 
 leaw $65535, %A
-movw %A, %D
-leaw $18674, %A
-movw %D, (%A)
-
-leaw $65535, %A
-movw %A, %D
-leaw $18675, %A
-movw %D, (%A)
-
-leaw $65535, %A
-movw %A, %D
-leaw $18676, %A
-movw %D, (%A)
-
-leaw $65535, %A
-movw %A, %D
-leaw $18677, %A
-movw %D, (%A)
-
-leaw $65535, %A
-movw %A, %D
-leaw $18678, %A
-movw %D, (%A)
-
-leaw $65535, %A
-movw %A, %D
-leaw $18679, %A
-movw %D, (%A)
-
-leaw $65535, %A
-movw %A, %D
-leaw $18680, %A
-movw %D, (%A)
-
-leaw $65535, %A
-movw %A, %D
-leaw $18681, %A
-movw %D, (%A)
-
-leaw $65472, %A
-movw %A, %D
-leaw $18682, %A
-movw %D, (%A)
+movw %A, %D​
