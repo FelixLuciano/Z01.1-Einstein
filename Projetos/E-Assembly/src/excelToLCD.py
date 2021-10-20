@@ -18,7 +18,7 @@ pixels = np.where(ones)
 memory = {}
 
 for y, x in zip(*pixels):
-  address = START +  np.floor(x / SIZE) + y * SIZE
+  address = START + np.floor(x / SIZE) + y * WIDTH / SIZE
   bit = SIZE - x % SIZE - 1
 
   if not address in memory:
