@@ -3,101 +3,112 @@
 -- file: CPU.vhd
 -- date: 4/4/2017
 
-library IEEE;
-use IEEE.STD_LOGIC_1164.all;
+LIBRARY IEEE;
+USE IEEE.STD_LOGIC_1164.ALL;
 
-entity CPU is
-  port(
-    clock:       in  STD_LOGIC;                        -- sinal de clock para CPU
-    reset:       in  STD_LOGIC;                        -- reinicia toda a CPU (inclusive o Program Counter)
-    inM:         in  STD_LOGIC_VECTOR(15 downto 0);    -- dados lidos da memória RAM
-    instruction: in  STD_LOGIC_VECTOR(17 downto 0);    -- instrução (dados) vindos da memória ROM
-    outM:        out STD_LOGIC_VECTOR(15 downto 0);    -- dados para gravar na memória RAM
-    writeM:      out STD_LOGIC;                        -- faz a memória RAM gravar dados da entrada
-    addressM:    out STD_LOGIC_VECTOR(14 downto 0);    -- envia endereço para a memória RAM
-    pcout:       out STD_LOGIC_VECTOR(14 downto 0)     -- endereço para ser enviado a memória ROM
+ENTITY CPU IS
+  PORT (
+    clock       : IN STD_LOGIC;                      -- sinal de clock para CPU
+    reset       : IN STD_LOGIC;                      -- reinicia toda a CPU (inclusive o Program Counter)
+    inM         : IN STD_LOGIC_VECTOR(15 DOWNTO 0);  -- dados lidos da memória RAM
+    instruction : IN STD_LOGIC_VECTOR(17 DOWNTO 0);  -- instrução (dados) vindos da memória ROM
+    outM        : OUT STD_LOGIC_VECTOR(15 DOWNTO 0); -- dados para gravar na memória RAM
+    writeM      : OUT STD_LOGIC;                     -- faz a memória RAM gravar dados da entrada
+    addressM    : OUT STD_LOGIC_VECTOR(14 DOWNTO 0); -- envia endereço para a memória RAM
+    pcout       : OUT STD_LOGIC_VECTOR(14 DOWNTO 0)  -- endereço para ser enviado a memória ROM
+  );
+END ENTITY;
+
+ARCHITECTURE arch OF CPU IS
+
+  COMPONENT Mux16 IS
+    PORT (
+      a   : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
+      b   : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
+      sel : IN STD_LOGIC;
+      q   : OUT STD_LOGIC_VECTOR(15 DOWNTO 0)
     );
-end entity;
+  END COMPONENT;
 
-architecture arch of CPU is
+  COMPONENT ALU IS
+    PORT (
+      x, y  : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
+      zx    : IN STD_LOGIC;
+      nx    : IN STD_LOGIC;
+      zy    : IN STD_LOGIC;
+      ny    : IN STD_LOGIC;
+      f     : IN STD_LOGIC;
+      no    : IN STD_LOGIC;
+      zr    : OUT STD_LOGIC;
+      ng    : OUT STD_LOGIC;
+      saida : OUT STD_LOGIC_VECTOR(15 DOWNTO 0)
+    );
+  END COMPONENT;
 
-  component Mux16 is
-    port (
-      a:   in  STD_LOGIC_VECTOR(15 downto 0);
-      b:   in  STD_LOGIC_VECTOR(15 downto 0);
-      sel: in  STD_LOGIC;
-      q:   out STD_LOGIC_VECTOR(15 downto 0)
-      );
-  end component;
+  COMPONENT Register16 IS
+    PORT (
+      clock  : IN STD_LOGIC;
+      input  : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
+      load   : IN STD_LOGIC;
+      output : OUT STD_LOGIC_VECTOR(15 DOWNTO 0)
+    );
+  END COMPONENT;
 
-  component ALU is
-    port (
-      x,y:   in STD_LOGIC_VECTOR(15 downto 0);
-      zx:    in STD_LOGIC;
-      nx:    in STD_LOGIC;
-      zy:    in STD_LOGIC;
-      ny:    in STD_LOGIC;
-      f:     in STD_LOGIC;
-      no:    in STD_LOGIC;
-      zr:    out STD_LOGIC;
-      ng:    out STD_LOGIC;
-      saida: out STD_LOGIC_VECTOR(15 downto 0)
-      );
-  end component;
+  COMPONENT pc IS
+    PORT (
+      clock     : IN STD_LOGIC;
+      increment : IN STD_LOGIC;
+      load      : IN STD_LOGIC;
+      reset     : IN STD_LOGIC;
+      input     : IN STD_LOGIC_VECTOR(15 DOWNTO 0);
+      output    : OUT STD_LOGIC_VECTOR(15 DOWNTO 0)
+    );
+  END COMPONENT;
 
-  component Register16 is
-    port(
-      clock:   in std_logic;
-      input:   in STD_LOGIC_VECTOR(15 downto 0);
-      load:    in std_logic;
-      output: out STD_LOGIC_VECTOR(15 downto 0)
-      );
-  end component;
+  COMPONENT ControlUnit IS
+    PORT (
+      instruction                 : IN STD_LOGIC_VECTOR(17 DOWNTO 0);
+      zr, ng                      : IN STD_LOGIC;
+      muxALUI_A                   : OUT STD_LOGIC;
+      muxAM                       : OUT STD_LOGIC;
+      zx, nx, zy, ny, f, no       : OUT STD_LOGIC;
+      loadA, loadD, loadM, loadPC : OUT STD_LOGIC
+    );
+  END COMPONENT;
 
-  component pc is
-    port(
-      clock     : in  STD_LOGIC;
-      increment : in  STD_LOGIC;
-      load      : in  STD_LOGIC;
-      reset     : in  STD_LOGIC;
-      input     : in  STD_LOGIC_VECTOR(15 downto 0);
-      output    : out STD_LOGIC_VECTOR(15 downto 0)
-      );
-  end component;
+  SIGNAL c_muxALUI_A : STD_LOGIC;
+  SIGNAL c_muxAM     : STD_LOGIC;
+  SIGNAL c_zx        : STD_LOGIC;
+  SIGNAL c_nx        : STD_LOGIC;
+  SIGNAL c_zy        : STD_LOGIC;
+  SIGNAL c_ny        : STD_LOGIC;
+  SIGNAL c_f         : STD_LOGIC;
+  SIGNAL c_no        : STD_LOGIC;
+  SIGNAL c_loadA     : STD_LOGIC;
+  SIGNAL c_loadD     : STD_LOGIC;
+  SIGNAL c_loadPC    : STD_LOGIC;
+  SIGNAL c_zr        : STD_LOGIC := '0';
+  SIGNAL c_ng        : STD_LOGIC := '0';
 
-  component ControlUnit is
-    port(
-      instruction                 : in STD_LOGIC_VECTOR(17 downto 0);
-      zr,ng                       : in STD_LOGIC;
-      muxALUI_A                   : out STD_LOGIC;
-      muxAM                       : out STD_LOGIC;
-      zx, nx, zy, ny, f, no       : out STD_LOGIC;
-      loadA, loadD, loadM, loadPC : out STD_LOGIC
-      );
-  end component;
+  SIGNAL s_muxALUI_Aout : STD_LOGIC_VECTOR(15 DOWNTO 0);
+  SIGNAL s_muxAM_out    : STD_LOGIC_VECTOR(15 DOWNTO 0);
+  SIGNAL s_regAout      : STD_LOGIC_VECTOR(15 DOWNTO 0);
+  SIGNAL s_regDout      : STD_LOGIC_VECTOR(15 DOWNTO 0);
+  SIGNAL s_ALUout       : STD_LOGIC_VECTOR(15 DOWNTO 0);
 
-  signal c_muxALUI_A: STD_LOGIC;
-  signal c_muxAM: STD_LOGIC;
-  signal c_zx: STD_LOGIC;
-  signal c_nx: STD_LOGIC;
-  signal c_zy: STD_LOGIC;
-  signal c_ny: STD_LOGIC;
-  signal c_f: STD_LOGIC;
-  signal c_no: STD_LOGIC;
-  signal c_loadA: STD_LOGIC;
-  signal c_loadD: STD_LOGIC;
-  signal c_loadPC: STD_LOGIC;
-  signal c_zr: std_logic := '0';
-  signal c_ng: std_logic := '0';
+  SIGNAL s_pcout : STD_LOGIC_VECTOR(15 DOWNTO 0);
 
-  signal s_muxALUI_Aout: STD_LOGIC_VECTOR(15 downto 0);
-  signal s_muxAM_out: STD_LOGIC_VECTOR(15 downto 0);
-  signal s_regAout: STD_LOGIC_VECTOR(15 downto 0);
-  signal s_regDout: STD_LOGIC_VECTOR(15 downto 0);
-  signal s_ALUout: STD_LOGIC_VECTOR(15 downto 0);
+BEGIN
+  RegD: Register16 PORT MAP (clock, s_muxALUI_Aout, c_loadD, s_regDout);
 
-  signal s_pcout: STD_LOGIC_VECTOR(15 downto 0);
+  MuxALUI: Mux16 PORT MAP (s_ALUout, instruction, sel, s_muxALUI_Aout);
 
-begin
+  RegA: Register16 PORT MAP (clock, s_ALUout, c_loadA, s_regAout);
 
-end architecture;
+  MuxAMD: Mux16 PORT MAP (s_regAout, inM, sel, s_muxAM_out);
+
+  ALUI: ALU PORT MAP (s_regDout, s_muxAM_out, c_zx, c_nx, c_zy, c_ny, c_f, c_no, c_zr, c_ng, s_ALUout);
+
+  c: ControlUnit PORT MAP (instruction, c_zx, c_nx, c_zy, c_ny, c_f, c_no, c_loadA, c_loadD, , c_loadPC);
+
+END ARCHITECTURE;
