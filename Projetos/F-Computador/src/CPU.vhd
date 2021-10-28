@@ -99,16 +99,21 @@ ARCHITECTURE arch OF CPU IS
   SIGNAL s_pcout : STD_LOGIC_VECTOR(15 DOWNTO 0);
 
 BEGIN
-  RegD: Register16 PORT MAP (clock, s_muxALUI_Aout, c_loadD, s_regDout);
+  RegD : Register16 PORT MAP(clock, s_ALUout, c_loadD, s_regDout);
 
-  MuxALUI: Mux16 PORT MAP (s_ALUout, instruction, sel, s_muxALUI_Aout);
+  MuxALUI : Mux16 PORT MAP(s_ALUout, instruction(15 DOWNTO 0), c_muxALUI_A, s_muxALUI_Aout);
 
-  RegA: Register16 PORT MAP (clock, s_ALUout, c_loadA, s_regAout);
+  RegA : Register16 PORT MAP(clock, s_muxALUI_Aout, c_loadA, s_regAout);
 
-  MuxAMD: Mux16 PORT MAP (s_regAout, inM, sel, s_muxAM_out);
+  MuxAMD : Mux16 PORT MAP(s_regAout, inM, c_muxAM, s_muxAM_out);
 
-  ALUI: ALU PORT MAP (s_regDout, s_muxAM_out, c_zx, c_nx, c_zy, c_ny, c_f, c_no, c_zr, c_ng, s_ALUout);
+  ALUI : ALU PORT MAP(s_regDout, s_muxAM_out, c_zx, c_nx, c_zy, c_ny, c_f, c_no, c_zr, c_ng, s_ALUout);
 
-  c: ControlUnit PORT MAP (instruction, c_zx, c_nx, c_zy, c_ny, c_f, c_no, c_loadA, c_loadD, , c_loadPC);
+  PC : pc PORT MAP(clock, , c_loadPC, reset, , s_pcout);
+
+  CU : ControlUnit PORT MAP(instruction, c_zx, c_nx, c_muxALUI_A, c_muxAM, c_zx, c_nx, c_zy, c_ny, c_f, c_no, c_loadA, c_loadD, writeM, c_loadPC);
+
+  outM <= s_ALUout
+  pcout <= s_pcout
 
 END ARCHITECTURE;
