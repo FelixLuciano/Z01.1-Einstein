@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * Encapsula o código de leitura. Carrega as instruções na linguagem assembly,
@@ -89,7 +90,14 @@ public class Parser {
      */
     public CommandType commandType(String command) {
         /* TODO: implementar */
-    	return null;
+        String comeco = command.substring(0, 4);
+        if (command.contains("leaw")){
+            return CommandType.A_COMMAND;
+        }
+        if (command.contains(":")){
+            return CommandType.L_COMMAND;
+        }
+        return CommandType.C_COMMAND;
     }
 
     /**
@@ -100,7 +108,8 @@ public class Parser {
      */
     public String symbol(String command) {
         /* TODO: implementar */
-    	return null;
+        String[] comando = command.split(",");
+    	return comando[0].substring(6);
     }
 
     /**
@@ -111,7 +120,7 @@ public class Parser {
      */
     public String label(String command) {
         /* TODO: implementar */
-    	return null;
+    	return command.replaceAll(":", "");
     }
 
     /**
@@ -122,7 +131,8 @@ public class Parser {
      */
     public String[] instruction(String command) {
         /* TODO: implementar */
-    	return null;
+        String[] comandos = command.replaceAll(" ",",").split(",");
+    	return comandos;
     }
 
 

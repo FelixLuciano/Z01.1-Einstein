@@ -72,12 +72,6 @@ public class ParserTest {
     @Test
     public void testParser_commandType() {
 
-    	try {
-    		org.junit.Assume.assumeNotNull( parser.commandType("nop") );		// ignora test
-        } catch(Exception e) { 
-        	org.junit.Assume.assumeNoException(e);
-        }
-    	
         try {
         	
             assertTrue("leaw $0,%A",parser.commandType("leaw $0,%A")==Parser.CommandType.A_COMMAND);
@@ -119,11 +113,6 @@ public class ParserTest {
     @Test
     public void testParser_symbol() {
 
-    	try {
-    		org.junit.Assume.assumeNotNull( parser.symbol("leaw $0,%A") );		// ignora test
-        } catch(Exception e) { 
-        	org.junit.Assume.assumeNoException(e);
-        }
         try {
 
 	            assertTrue("leaw $0,%A",parser.symbol("leaw $0,%A").equals("0"));
@@ -142,11 +131,6 @@ public class ParserTest {
     @Test
     public void testParser_instruction() {
 
-    	try {
-    		org.junit.Assume.assumeTrue( parser.instruction("nop") != null );		// ignora test
-        } catch(Exception e) { 
-        	org.junit.Assume.assumeNoException(e);
-        }
     	
         try {
     	
@@ -177,14 +161,14 @@ public class ParserTest {
      */
     @Test
     public void testParser_advance() {
-    	
+
     	try {
     		Parser parser_testEmpty = new Parser("src/test/resources/testEmpty.nasm");
     		org.junit.Assume.assumeNotNull( parser_testEmpty.advance() );		// ignora test
-        } catch(Exception e) { 
+        } catch(Exception e) {
         	org.junit.Assume.assumeNoException(e);
         }
-    	
+
         try {
     	
             Parser parser_testLeaw = new Parser("src/test/resources/testLeaw.nasm");
