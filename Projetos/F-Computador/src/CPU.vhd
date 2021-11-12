@@ -117,7 +117,7 @@ begin
     q => s_muxAM_out
   );
 
-  alu: ALU
+  ula: ALU
 	port map
 	(
 		x => s_regDout ,
@@ -151,7 +151,7 @@ begin
     output => s_regAout 
   );
   
-  pc: pc
+  programCounter: pc
   port map
   (
     clock => clock,

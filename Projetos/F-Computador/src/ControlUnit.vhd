@@ -35,9 +35,10 @@ begin
     muxALUI_A <= instruction(3) or not instruction(17);
     zx        <= instruction(12) and instruction(17);
     loadPC    <= (instruction(1) and zr and instruction(17)) or 
-                 (instruction(0) and not ng and instruction(17) and not instruction(2)) or 
-                 (instruction(2) and ng and instruction(17) and not instruction(0)) or
-                 (instruction(2) and instruction(0) and instruction(17) and not zr);
+                 (instruction(0) and not ng and instruction(17) and not zr) or 
+                 (instruction(2) and ng and instruction(17)) or
+                 (instruction(2) and instruction(0) and instruction(17) and not zr) or
+                 (instruction(17) and instruction(0) and instruction(1) and instruction(2));
     muxAM      <= instruction(13);
     zy         <= instruction(17) and instruction(10);
     nx         <= instruction(17) and instruction(11);
