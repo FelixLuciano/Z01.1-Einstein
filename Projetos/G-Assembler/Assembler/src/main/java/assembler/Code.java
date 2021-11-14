@@ -73,7 +73,7 @@ public class Code {
      */
     public static String comp(String[] mnemnonic) {
         /* TODO: implementar */
-    	return "";
+        return "";
     }
 
     /**
@@ -82,8 +82,48 @@ public class Code {
      * @return Opcode (String de 3 bits) com código em linguagem de máquina para a instrução.
      */
     public static String jump(String[] mnemnonic) {
-        /* TODO: implementar */
-    	return "";
+        boolean j2 = false;
+        boolean j1 = false;
+        boolean j0 = false;
+
+        switch(mnemnonic[0]) {
+            case "jg":
+                j0 = true;
+                break;
+            case "je":
+                j1 = true;
+                break;
+            case "jge":
+                j1 = true;
+                j0 = true;
+                break;
+            case "jl":
+                j2 = true;
+                break;
+            case "jne":
+                j2 = true;
+                j0 = true;
+                break;
+            case "jle":
+                j2 = true;
+                j1 = true;
+                break;
+            case "jmp":
+                j2 = true;
+                j1 = true;
+                j0 = true;
+                break;
+            default:
+                break;
+        }
+
+        String opcode = "";
+
+        opcode += j2 ? "1" : "0";
+        opcode += j1 ? "1" : "0";
+        opcode += j0 ? "1" : "0";
+
+        return opcode;
     }
 
     /**
