@@ -16,8 +16,54 @@ public class Code {
      * @return Opcode (String de 4 bits) com código em linguagem de máquina para a instrução.
      */
     public static String dest(String[] mnemnonic) {
-        /* TODO: implementar */
-    	return "";
+        int i;
+        boolean loadA = false;
+        boolean loadD = false;
+        boolean loadM = false;
+
+        switch(mnemnonic[0]) {
+            default:
+                i = 1;
+                break;
+            case "movw":
+            case "addw":
+                i = 2;
+                break;
+            case "subw":
+            case "andw":
+            case "rsubw":
+            case "orw":
+                i = 3;
+                break;
+        }
+
+        for (; i < mnemnonic.length; i++) {
+            switch(mnemnonic[i]) {
+                case "%A":
+                case "$a":
+                    loadA = true;
+                    break;
+                case "%D":
+                case "%d":
+                    loadD = true;
+                    break;
+                case "(%A)":
+                case "(%a)":
+                case "(%D)":
+                case "(%d)":
+                    loadM = true;
+                    break;
+            }
+        }
+
+        String opcode = "";
+
+        opcode += "0";
+        opcode += loadM ? "1" : "0";
+        opcode += loadD ? "1" : "0";
+        opcode += loadA ? "1" : "0";
+
+    	return opcode;
     }
 
     /**
