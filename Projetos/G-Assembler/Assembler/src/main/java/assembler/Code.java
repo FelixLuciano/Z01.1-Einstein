@@ -46,8 +46,10 @@ public class Code {
      * @return Valor em binário (String de 15 bits) representado com 0s e 1s.
      */
     public static String toBinary(String symbol) {
-        /* TODO: implementar */
-    	return "";
+        int binValue = Integer.parseInt(symbol);
+        String binary = Integer.toBinaryString(binValue);
+
+        return String.format("%16s", binary).replace(' ', '0');
     }
 
 }
