@@ -16,8 +16,54 @@ public class Code {
      * @return Opcode (String de 4 bits) com código em linguagem de máquina para a instrução.
      */
     public static String dest(String[] mnemnonic) {
-        /* TODO: implementar */
-    	return "";
+        int i;
+        boolean loadA = false;
+        boolean loadD = false;
+        boolean loadM = false;
+
+        switch(mnemnonic[0]) {
+            default:
+                i = 1;
+                break;
+            case "movw":
+            case "addw":
+                i = 2;
+                break;
+            case "subw":
+            case "andw":
+            case "rsubw":
+            case "orw":
+                i = 3;
+                break;
+        }
+
+        for (; i < mnemnonic.length; i++) {
+            switch(mnemnonic[i]) {
+                case "%A":
+                case "$a":
+                    loadA = true;
+                    break;
+                case "%D":
+                case "%d":
+                    loadD = true;
+                    break;
+                case "(%A)":
+                case "(%a)":
+                case "(%D)":
+                case "(%d)":
+                    loadM = true;
+                    break;
+            }
+        }
+
+        String opcode = "";
+
+        opcode += "0";
+        opcode += loadM ? "1" : "0";
+        opcode += loadD ? "1" : "0";
+        opcode += loadA ? "1" : "0";
+
+    	return opcode;
     }
 
     /**
@@ -27,7 +73,7 @@ public class Code {
      */
     public static String comp(String[] mnemnonic) {
         /* TODO: implementar */
-    	return "";
+        return "";
     }
 
     /**
@@ -36,8 +82,48 @@ public class Code {
      * @return Opcode (String de 3 bits) com código em linguagem de máquina para a instrução.
      */
     public static String jump(String[] mnemnonic) {
-        /* TODO: implementar */
-    	return "";
+        boolean j2 = false;
+        boolean j1 = false;
+        boolean j0 = false;
+
+        switch(mnemnonic[0]) {
+            case "jg":
+                j0 = true;
+                break;
+            case "je":
+                j1 = true;
+                break;
+            case "jge":
+                j1 = true;
+                j0 = true;
+                break;
+            case "jl":
+                j2 = true;
+                break;
+            case "jne":
+                j2 = true;
+                j0 = true;
+                break;
+            case "jle":
+                j2 = true;
+                j1 = true;
+                break;
+            case "jmp":
+                j2 = true;
+                j1 = true;
+                j0 = true;
+                break;
+            default:
+                break;
+        }
+
+        String opcode = "";
+
+        opcode += j2 ? "1" : "0";
+        opcode += j1 ? "1" : "0";
+        opcode += j0 ? "1" : "0";
+
+        return opcode;
     }
 
     /**
