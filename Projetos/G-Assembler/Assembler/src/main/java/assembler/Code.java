@@ -72,8 +72,143 @@ public class Code {
      * @return Opcode (String de 7 bits) com código em linguagem de máquina para a instrução.
      */
     public static String comp(String[] mnemnonic) {
-        /* TODO: implementar */
-        return "";
+        boolean r0 = false;
+        boolean zx = false;
+        boolean nx = false;
+        boolean zy = false;
+        boolean ny = false;
+        boolean f  = false;
+        boolean no = false;
+
+        switch(mnemnonic[0]) {
+            case "movw":
+                switch(mnemnonic[1]) {
+                    case "%A":
+                    case "(%A)":
+                        zx = nx = true;
+                        r0 = mnemnonic[1] == "(%A)";
+                        break;
+                    case "%D":
+                        zy = ny = true;
+                        break;
+                }
+                break;
+            case "addw":
+                f = true;
+                r0 = mnemnonic[1] == "(%A)" || mnemnonic[2] == "(%A)";
+                zx = nx = ny = no = mnemnonic[1] == "$1" || mnemnonic[2] == "$1";
+                break;
+            case "subw":
+                f = true;
+                switch(mnemnonic[1]) {
+                    case "%A":
+                    case "(%A)":
+                        r0 = mnemnonic[1] == "(%A)";
+                        switch (mnemnonic[2]) {
+                            case "%D":
+                                ny = no = true;
+                                break;
+                            case "$1":
+                                zx = nx = true;
+                                break;
+                        }
+                        break;
+                    case "%D":
+                        r0 = mnemnonic[2] == "(%A)";
+                        nx = no = true;
+                        break;
+                }
+                break;
+            case "rsubw":
+                f = true;
+                switch(mnemnonic[2]) {
+                    case "%A":
+                    case "(%A)":
+                        r0 = mnemnonic[2] == "(%A)";
+                        switch (mnemnonic[1]) {
+                            case "%D":
+                                ny = no = true;
+                                break;
+                            case "$1":
+                                zy = nx = true;
+                                break;
+                        }
+                        break;
+                    case "%D":
+                        r0 = mnemnonic[1] == "(%A)";
+                        nx = no = true;
+                        break;
+                }
+                break;
+            case "incw":
+                nx = ny = f = no = true;
+                if (mnemnonic[1] == "%A" || mnemnonic[1] == "(%A)") {
+                    zx = true;
+                    r0 = mnemnonic[1] == "(%A)";
+                }
+                else if (mnemnonic[1] == "%D") {
+                    zy = true;
+                }
+                break;
+            case "decw":
+                if (mnemnonic[1] == "%A" || mnemnonic[1] == "(%A)") {
+                    zx = nx = f = true;
+                    r0 = mnemnonic[1] == "(%A)";
+                }
+                else if (mnemnonic[1] == "%D") {
+                    zy = ny = f = true;
+                }
+                break;
+            case "notw":
+                no = true;
+                if (mnemnonic[1] == "%A" || mnemnonic[1] == "(%A)") {
+                    zx = nx = true;
+                    r0 = mnemnonic[1] == "(%A)";
+                }
+                else if (mnemnonic[1] == "%D") {
+                    zy = ny = true;
+                }
+                break;
+            case "negw":
+                f = no = true;
+                if (mnemnonic[1] == "%A" || mnemnonic[1] == "(%A)") {
+                    zx = nx = true;
+                    r0 = mnemnonic[1] == "(%A)";
+                }
+                else if (mnemnonic[1] == "%D") {
+                    zy = ny = true;
+                }
+                break;
+            case "andw":
+                r0 = mnemnonic[1] == "(%A)" || mnemnonic[2] == "(%A)";
+                break;
+            case "orw":
+                nx = ny = no = true;
+                r0 = mnemnonic[1] == "(%A)" || mnemnonic[2] == "(%A)";
+                break;
+            case "jmp":
+            case "je":
+            case "jne":
+            case "jg":
+            case "jge":
+            case "jl":
+            case "jle":
+                zy = ny = true;
+                break;
+        }
+
+        String opcode = "";
+
+        opcode += "00";
+        opcode += r0 ? "1" : "0";
+        opcode += zx ? "1" : "0";
+        opcode += nx ? "1" : "0";
+        opcode += zy ? "1" : "0";
+        opcode += ny ? "1" : "0";
+        opcode += f  ? "1" : "0";
+        opcode += no ? "1" : "0";
+
+        return opcode;
     }
 
     /**
